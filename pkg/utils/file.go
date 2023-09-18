@@ -34,7 +34,7 @@ func verifyFileType(refPath string, config Configuration) string {
 		"icloud": "fonts",
 	}
 
-	testFileType := fileSurname
+	testFileType := fileSurname[1:]
 
 	if testFileType[len(testFileType)-1] == '\'' || testFileType[len(testFileType)-1] == '"' {
 		testFileType = testFileType[:len(testFileType)-1]
