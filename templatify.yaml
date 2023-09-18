@@ -37,7 +37,7 @@ cmd:
 
   - name: localify
     domain:
-    path: /auth/ncp_test
+    path: /auth/ncp_hello
     app_folder: /ncp
 
     image: /images

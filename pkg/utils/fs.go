@@ -266,6 +266,15 @@ func processJS(fileAbsPath string, config *Configuration) {
 	for find, replace := range kv {
 
 		replace = `"` + replace + `"`
+
+		// if cmd is localify append PREFIX + FOLDER +
+		if config.Name == "localify" {
+
+			pathPrefix := "PREFIX + FOLDER +"
+
+			replace = fmt.Sprintf("%s%s", pathPrefix, replace)
+		}
+
 		jsContent = strings.Replace(jsContent, find, replace, -1)
 	}
 
