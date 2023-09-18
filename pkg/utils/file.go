@@ -116,3 +116,14 @@ func preserveSubDir(refPath string) string {
 	// if cannot find file type, possible something like Lisense file
 
 }
+
+// func isValidURL(s string) bool {
+
+// 	_, err := url.ParseRequestURI(s)
+// 	if err != nil {
+// 		return false
+// 	}
+
+// 	return true
+// 	// return u.Scheme != "" && strings.Contains(u.Scheme, "http")
+// }
