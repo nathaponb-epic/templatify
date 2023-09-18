@@ -20,18 +20,18 @@ func verifyFileType(refPath string, config Configuration) string {
 	}
 
 	supportFileType = map[string]string{
-		"png":    "images",
-		"svg":    "images",
-		"ico":    "images",
-		"gif":    "images",
-		"jpeg":   "images",
-		"js":     "script",
-		"css":    "script",
-		"json":   "script",
-		"ttf":    "fonts",
-		"woff":   "fonts",
-		"woff2":  "fonts",
-		"icloud": "fonts",
+		"png":    config.Image,
+		"svg":    config.Image,
+		"ico":    config.Image,
+		"gif":    config.Image,
+		"jpeg":   config.Image,
+		"js":     config.Script,
+		"css":    config.Script,
+		"json":   config.Script,
+		"ttf":    config.Font,
+		"woff":   config.Font,
+		"woff2":  config.Font,
+		"icloud": config.Font,
 	}
 
 	testFileType := fileSurname[1:]
@@ -80,7 +80,7 @@ func preserveSubDir(refPath string) string {
 		var rootPath string
 		for k, v := range supportFileType {
 			if k == fileType {
-				rootPath = v
+				rootPath = v[1:] // slice out forward slash
 			}
 		}
 
@@ -96,7 +96,7 @@ func preserveSubDir(refPath string) string {
 
 		if !found {
 			// return with default file type root path
-			return fmt.Sprintf("/%s/%s", supportFileType[fileType], lastSlash)
+			return fmt.Sprintf("%s/%s", supportFileType[fileType], lastSlash)
 		} else {
 
 			target := slashedPaths[startIndex:]
@@ -107,7 +107,7 @@ func preserveSubDir(refPath string) string {
 				join = join[:len(join)-1]
 			}
 
-			return fmt.Sprintf("/%s", join)
+			return "/" + join
 		}
 
 	}

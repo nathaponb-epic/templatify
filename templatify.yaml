@@ -1,14 +1,14 @@
 cmd:
   - name: cdnify
     domain: https://cdn.nathaponb.com
-    path: /ncp/ncp_static_assets
+    path: /ncp
     app_folder: /ncpCDN
 
-    image: /pic
-    css: /css
+    image: /images
+    css: /script
     script: /script
-    font: /font
-    constant: /constant
+    constant: /script
+    font: /fonts
 
     ignore_dir:
       - fonts
