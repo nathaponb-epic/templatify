@@ -1,0 +1,54 @@
+cmd:
+  - name: cdnify
+    domain: https://cdn.adme.com
+    path: /ncp/ncp_static_assets
+    app_folder: /ncpCDN
+
+    image: /images
+    css: /css
+    script: /script
+    font: /font
+    constant: /constant
+
+    ignore_dir:
+      - fonts
+      - images
+      - mail
+      - constant
+      - font-awesome-4.7.0
+      - sweetalert2-8.17.4
+
+    ignore_file:
+      - bootstrap-datepicker.min.css
+      - bootstrap.min.css
+      - bootstrap.min.js
+      - bs-datepicker.js
+      - popper.min.js
+      - jsrsasign-all-min.js
+
+  - name: localify
+    domain:
+    path: /auth/ncp
+    app_folder: /ncp
+
+    image: /images
+    css: /css
+    script: /script
+    font: /font
+    constant: /constant
+
+    ignore_dir:
+      - fonts
+      - images
+      - mail
+      - constant
+      - font-awesome-4.7.0
+      - sweetalert2-8.17.4
+
+    ignore_file:
+      - bootstrap-datepicker.min.css
+      - bootstrap.min.css
+      - bootstrap.min.js
+      - bs-datepicker.js
+      - popper.min.js
+      - jsrsasign-all-min.js
