@@ -1,38 +1,72 @@
 package cmd
 
 import (
+	"errors"
 	"fmt"
 	"os"
 
+	"github.com/manifoldco/promptui"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-)
 
-type CMD struct {
-	Configulation []Configuration `mapstructure:"cmd"`
-}
-type Configuration struct {
-	Name       string   `mapstructure:"name"`
-	Domain     string   `mapstructure:"domain"`
-	Path       string   `mapstructure:"path"`
-	AppFolder  string   `mapstructure:"app_folder"`
-	Image      string   `mapstructure:"image"`
-	CSS        string   `mapstructure:"css"`
-	Script     string   `mapstructure:"script"`
-	Font       string   `mapstructure:"font"`
-	Constant   string   `mapstructure:"constant"`
-	IgnoreDir  []string `mapstructure:"ignore_dir"`
-	IgnoreFile []string `mapstructure:"ignore_file"`
-}
+	"github.com/nathaponb-epic/templatify/pkg/utils"
+)
 
 var (
 	cfgFile string
-	cfgData CMD
+	cfgData utils.CMD
 
 	rootCmd = &cobra.Command{
 		RunE: func(cmd *cobra.Command, args []string) error {
 
-			return nil
+			// prompt to user choose a command
+			cmds := []string{"cdnify", "localify"}
+			prompt := promptui.Select{
+				Label: "Select command",
+				Items: cmds,
+			}
+			_, result, err := prompt.Run()
+			if err != nil {
+				return err
+			}
+
+			var cdnifyObj utils.Configuration
+			var localifyObj utils.Configuration
+
+			yamlConfigCmds := make(map[string]bool)
+			for _, v := range cfgData.Configulation {
+
+				yamlConfigCmds[v.Name] = true
+
+				if v.Name == "cdnify" {
+					cdnifyObj = v
+				} else if v.Name == "localify" {
+					localifyObj = v
+				}
+			}
+
+			// run command based on user select option prompt
+			switch result {
+			case "cdnify":
+
+				// check for cmd config
+				if !yamlConfigCmds["cdnify"] {
+					return errors.New("cdnify attribute not found on config file")
+				}
+
+				return utils.Walker(cdnifyObj)
+
+			case "localify":
+
+				// check for cmd config
+				if !yamlConfigCmds["localify"] {
+					return errors.New("localify attribute not found on config file")
+				}
+
+				return utils.Walker(localifyObj)
+			default:
+				return nil
+			}
 		},
 	}
 )
