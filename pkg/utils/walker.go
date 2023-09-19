@@ -7,13 +7,13 @@ import (
 )
 
 type CMD struct {
-	Configulation []Configuration `mapstructure:"cmd"`
+	Configulation []Configuration `mapstructure:"commands"`
 }
 type Configuration struct {
 	Name      string `mapstructure:"name"`
 	Domain    string `mapstructure:"domain"`
 	Path      string `mapstructure:"path"`
-	AppFolder string `mapstructure:"app_folder"`
+	AppPrefix string `mapstructure:"app_prefix"`
 	RootPath  struct {
 		Image    string `mapstructure:"image"`
 		CSS      string `mapstructure:"css"`

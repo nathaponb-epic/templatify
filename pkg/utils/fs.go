@@ -209,7 +209,7 @@ func processJS(fileAbsPath string, config *Configuration) {
 		// prepare value from user define yaml config file
 		for _, match := range matches {
 			if len(match) > 1 {
-				kv[match[1]] = config.AppFolder
+				kv[match[1]] = config.AppPrefix
 			}
 		}
 

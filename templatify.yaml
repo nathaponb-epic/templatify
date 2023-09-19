@@ -1,8 +1,8 @@
-cmd:
+commands:
   - name: cdnify
     domain: https://cdn.nathaponb.com
     path: /myID
-    app_folder: /ncpCDN
+    app_prefix: /ncpCDN
     root_path:
       image: /pic
       css: /script
