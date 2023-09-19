@@ -10,15 +10,17 @@ type CMD struct {
 	Configulation []Configuration `mapstructure:"cmd"`
 }
 type Configuration struct {
-	Name       string   `mapstructure:"name"`
-	Domain     string   `mapstructure:"domain"`
-	Path       string   `mapstructure:"path"`
-	AppFolder  string   `mapstructure:"app_folder"`
-	Image      string   `mapstructure:"image"`
-	CSS        string   `mapstructure:"css"`
-	Script     string   `mapstructure:"script"`
-	Font       string   `mapstructure:"font"`
-	Constant   string   `mapstructure:"constant"`
+	Name      string `mapstructure:"name"`
+	Domain    string `mapstructure:"domain"`
+	Path      string `mapstructure:"path"`
+	AppFolder string `mapstructure:"app_folder"`
+	RootPath  struct {
+		Image    string `mapstructure:"image"`
+		CSS      string `mapstructure:"css"`
+		Script   string `mapstructure:"script"`
+		Font     string `mapstructure:"font"`
+		Constant string `mapstructure:"constant"`
+	} `mapstructure:"root_path"`
 	IgnoreDir  []string `mapstructure:"ignore_dir"`
 	IgnoreFile []string `mapstructure:"ignore_file"`
 }

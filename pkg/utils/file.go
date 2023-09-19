@@ -20,18 +20,18 @@ func verifyFileType(refPath string, config Configuration) string {
 	}
 
 	supportFileType = map[string]string{
-		"png":    config.Image,
-		"svg":    config.Image,
-		"ico":    config.Image,
-		"gif":    config.Image,
-		"jpeg":   config.Image,
-		"js":     config.Script,
-		"css":    config.Script,
-		"json":   config.Script,
-		"ttf":    config.Font,
-		"woff":   config.Font,
-		"woff2":  config.Font,
-		"icloud": config.Font,
+		"png":    config.RootPath.Image,
+		"svg":    config.RootPath.Image,
+		"ico":    config.RootPath.Image,
+		"gif":    config.RootPath.Image,
+		"jpeg":   config.RootPath.Image,
+		"js":     config.RootPath.Script,
+		"css":    config.RootPath.Script,
+		"json":   config.RootPath.Script,
+		"ttf":    config.RootPath.Font,
+		"woff":   config.RootPath.Font,
+		"woff2":  config.RootPath.Font,
+		"icloud": config.RootPath.Font,
 	}
 
 	testFileType := fileSurname[1:]

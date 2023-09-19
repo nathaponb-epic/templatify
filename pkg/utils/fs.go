@@ -265,7 +265,9 @@ func processJS(fileAbsPath string, config *Configuration) {
 
 	for find, replace := range kv {
 
-		replace = `"` + replace + `"`
+		// replace = `"` + replace + `"`
+		// parse literal string to raw string
+		replace = fmt.Sprintf(`"%s"`, replace)
 
 		// if cmd is localify append PREFIX + FOLDER +
 		if config.Name == "localify" {
