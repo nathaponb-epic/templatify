@@ -1,14 +1,11 @@
 package main
 
-import (
-	"github.com/nathaponb-epic/templatify/cmd"
-)
+import "github.com/nathaponb-epic/templatify/cmd"
 
 func main() {
 
 	cmd.Execute()
 
-	// testQuote()
 }
 
 // func testQuote() {

@@ -229,6 +229,7 @@ func processJS(fileAbsPath string, config *Configuration) {
 
 	for _, match := range patternGetJSONMatches {
 		if len(match) > 1 {
+			// fmt.Printf("getJSON value: %s\n", match[1])
 			kv[match[1]] = ""
 		}
 	}

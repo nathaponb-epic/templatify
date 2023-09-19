@@ -48,6 +48,7 @@ commands:
       - mail
       - constant
       - font-awesome-4.7.0
+      - font-awesome-6.2.1
       - sweetalert2-8.17.4
       - cmd
       - pkg

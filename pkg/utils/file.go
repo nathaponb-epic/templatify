@@ -36,9 +36,10 @@ func verifyFileType(refPath string, config Configuration) string {
 
 	testFileType := fileSurname[1:]
 
-	if testFileType[len(testFileType)-1] == '\'' || testFileType[len(testFileType)-1] == '"' {
-		testFileType = testFileType[:len(testFileType)-1]
-	}
+	// if testFileType[len(testFileType)-1] == '\'' || testFileType[len(testFileType)-1] == '"' || testFileType[len(testFileType)-1] == '`' {
+	// 	testFileType = testFileType[:len(testFileType)-1]
+	// }
+	testFileType = unQuoteSuffix(testFileType)
 
 	if supportFileType[testFileType] == "" {
 		return refPath
@@ -72,9 +73,10 @@ func preserveSubDir(refPath string) string {
 		}
 
 		// exeption for last index symbol '
-		if fileType[len(fileType)-1] == '\'' || fileType[len(fileType)-1] == '"' {
-			fileType = fileType[:len(fileType)-1]
-		}
+		// if fileType[len(fileType)-1] == '\'' || fileType[len(fileType)-1] == '"' || fileType[len(fileType)-1] == '`' {
+		// 	fileType = fileType[:len(fileType)-1]
+		// }
+		fileType = unQuoteSuffix(fileType)
 
 		// get default root path of fileType
 		var rootPath string
@@ -103,9 +105,10 @@ func preserveSubDir(refPath string) string {
 
 			join := strings.Join(target, "/")
 
-			if join[len(join)-1] == '\'' || join[len(join)-1] == '"' {
-				join = join[:len(join)-1]
-			}
+			// if join[len(join)-1] == '\'' || join[len(join)-1] == '"' {
+			// 	join = join[:len(join)-1]
+			// }
+			join = unQuoteSuffix(join)
 
 			return "/" + join
 		}
@@ -115,6 +118,18 @@ func preserveSubDir(refPath string) string {
 	return ""
 	// if cannot find file type, possible something like Lisense file
 
+}
+
+func unQuoteSuffix(s string) string {
+	if s == "" {
+		return s
+	}
+
+	if s[len(s)-1] == '\'' || s[len(s)-1] == '"' || s[len(s)-1] == '`' {
+		s = s[:len(s)-1]
+	}
+
+	return s
 }
 
 // func isValidURL(s string) bool {
