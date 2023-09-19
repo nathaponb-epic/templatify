@@ -2,9 +2,23 @@
 
 The cli based application for manupulate the ADMD templates content.
 
+## Download and Installation
+
+### Windows
+* Download the latest version .exe file [templatify.exe]("./bin/windows/templatify.exe")
+* Place it inside a directory of choice
+* Update *PATH Variable* to templatify directory on your System
+
+### macOS
+* Download the latest version binary file [templatify]("./bin/macos/templatify")
+
+### Linux
+* Download the latest version binary file [templatify]("./bin/linux/templatify")
+---
+
 
 ## Commands
-Templatify version 0.0.1 Beta
+Templatify version 0.0.1
 * **cdnify**: *for update all related paths in the template to extenal content delivery service (CDN)*.
 * **localify**: *for update all the related paths back to local assets*
 
