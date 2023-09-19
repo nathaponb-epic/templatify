@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 )
 
-type CMD struct {
+type Commands struct {
 	Configulation []Configuration `mapstructure:"commands"`
 }
 type Configuration struct {

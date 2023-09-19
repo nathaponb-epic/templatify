@@ -14,7 +14,7 @@ import (
 
 var (
 	cfgFile string
-	cfgData utils.CMD
+	cfgData utils.Commands
 
 	rootCmd = &cobra.Command{
 		RunE: func(cmd *cobra.Command, args []string) error {
