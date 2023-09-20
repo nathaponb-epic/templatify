@@ -9,6 +9,7 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
+	"github.com/nathaponb-epic/templatify/cmd/version"
 	"github.com/nathaponb-epic/templatify/pkg/utils"
 )
 
@@ -17,6 +18,8 @@ var (
 	cfgData utils.Commands
 
 	rootCmd = &cobra.Command{
+		Use:   "templatify",
+		Short: "ADMD templates manupulating CLI",
 		RunE: func(cmd *cobra.Command, args []string) error {
 
 			// prompt to user choose a command
@@ -77,6 +80,8 @@ func Execute() error {
 
 func init() {
 	cobra.OnInitialize(initConfig)
+
+	rootCmd.AddCommand(version.VersionCommand)
 }
 
 func initConfig() {
@@ -97,12 +102,12 @@ func initConfig() {
 	err := viper.ReadInConfig()
 	if err != nil {
 		fmt.Println("Error: templatify.yaml not found")
-		os.Exit(1)
+		// os.Exit(1)
 	}
 
 	err = viper.Unmarshal(&cfgData)
 	if err != nil {
 		fmt.Println("Error: unmarshal templatify.yaml")
-		os.Exit(1)
+		// os.Exit(1)
 	}
 }
