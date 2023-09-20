@@ -4,7 +4,7 @@ commands:
     path: /myID
     app_prefix: /ncpCDN
     root_path:
-      image: /pic
+      image: /images
       css: /script
       script: /script
       constant: /script
@@ -19,6 +19,7 @@ commands:
       - sweetalert2-8.17.4
       - cmd
       - pkg
+      - bin
     ignore_file:
       - bootstrap-datepicker.min.css
       - bootstrap.min.css
@@ -31,6 +32,8 @@ commands:
       - main.go
       - README.md
       - templatify.yaml
+      - templatify.exe
+      - templatify
 
   - name: localify
     domain:
@@ -52,6 +55,7 @@ commands:
       - sweetalert2-8.17.4
       - cmd
       - pkg
+      - bin
     ignore_file:
       - bootstrap-datepicker.min.css
       - bootstrap.min.css
@@ -64,3 +68,5 @@ commands:
       - main.go
       - README.md
       - templatify.yaml
+      - templatify.exe
+      - templatify

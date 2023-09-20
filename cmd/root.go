@@ -30,8 +30,6 @@ var (
 				return err
 			}
 
-			fmt.Println(cfgData)
-
 			var cdnifyObj utils.Configuration
 			var localifyObj utils.Configuration
 

@@ -55,22 +55,26 @@ func processHTML(fileAbsPath string, config *Configuration) {
 
 			// process javascript code embeded in html file <script/>
 			if n.Data == "script" {
+
+				//*: refactor this logic onto a function use with processJS
 				if n.FirstChild != nil {
 
 					jsContent := n.FirstChild.Data
 
-					pattern := `\$\.getJSON\(([^,]+),`
-					regex := regexp.MustCompile(pattern)
+					// pattern := `\$\.getJSON\(([^,]+),`
+					// regex := regexp.MustCompile(pattern)
 
-					matches := regex.FindAllStringSubmatch(jsContent, -1)
+					// matches := regex.FindAllStringSubmatch(jsContent, -1)
 
-					kv := make(map[string]string)
+					// kv := make(map[string]string)
 
-					for _, match := range matches {
-						if len(match) > 1 {
-							kv[match[1]] = ""
-						}
-					}
+					// for _, match := range matches {
+					// 	if len(match) > 1 {
+					// 		kv[match[1]] = ""
+					// 	}
+					// }
+
+					kv := regexJs(jsContent)
 
 					for k, _ := range kv {
 
@@ -219,44 +223,7 @@ func processJS(fileAbsPath string, config *Configuration) {
 
 	}
 
-	// pattern getJSON
-	patternGetJSON := `\$\.getJSON\(([^,]+),`
-	regexGetJSON := regexp.MustCompile(patternGetJSON)
-
-	patternGetJSONMatches := regexGetJSON.FindAllStringSubmatch(jsContent, -1)
-
-	kv := make(map[string]string)
-
-	for _, match := range patternGetJSONMatches {
-		if len(match) > 1 {
-			// fmt.Printf("getJSON value: %s\n", match[1])
-			kv[match[1]] = ""
-		}
-	}
-
-	// pattern imageUrl
-	patternImgUrl := `imageUrl:(.*?),`
-	regexImgUrl := regexp.MustCompile(patternImgUrl)
-
-	patternImgUrlMatches := regexImgUrl.FindAllStringSubmatch(jsContent, -1)
-
-	// combine every matches
-	for _, match := range patternImgUrlMatches {
-		if len(match) > 1 {
-			kv[match[1]] = ""
-		}
-	}
-
-	// pattern .attr src
-	patternAttr := `\$\([^)]+\)\.attr\('src', (.*?);`
-	regexAttr := regexp.MustCompile(patternAttr)
-	patternAttrMatches := regexAttr.FindAllStringSubmatch(jsContent, -1)
-
-	for _, match := range patternAttrMatches {
-		if len(match) > 1 {
-			kv[match[1][:len(match[1])-1]] = ""
-		}
-	}
+	kv := regexJs(jsContent)
 
 	// verify ref file type from all the matches before replacing
 	for k, _ := range kv {
@@ -273,6 +240,11 @@ func processJS(fileAbsPath string, config *Configuration) {
 		// if cmd is localify append PREFIX + FOLDER +
 		if config.Name == "localify" {
 
+			//* slice out the prefix since in js file/tag the prefix is set as variable
+			// - find root_path by file extension
+			// - use it to slice out the
+			replace = sliceoutPrefixString(replace)
+
 			pathPrefix := "PREFIX + FOLDER +"
 
 			replace = fmt.Sprintf("%s%s", pathPrefix, replace)
@@ -287,5 +259,84 @@ func processJS(fileAbsPath string, config *Configuration) {
 	}
 
 	fmt.Printf("Updated file: %s\n", fileAbsPath)
+
+}
+
+func sliceoutPrefixString(s string) string {
+	// get file extension
+	fileExt := filepath.Ext(s)
+
+	fileExt = unQuoteSuffix(fileExt)
+
+	// get root_path
+	rootPath := supportFileType[fileExt[1:]]
+	if rootPath == "" {
+		return s
+	}
+
+	var targetIndex int
+
+	// slice the string by slash /
+	paths := strings.Split(s, "/")
+
+	for i, v := range paths {
+		// remove /
+		if v == rootPath[1:] {
+			targetIndex = i
+		}
+	}
+
+	newPath := paths[targetIndex:]
+	join := strings.Join(newPath, "/")
+
+	join = unQuoteSuffix(join)
+
+	return fmt.Sprintf(`"/%s"`, join)
+
+}
+
+// find the matches of target javascript content
+func regexJs(content string) map[string]string {
+
+	kv := make(map[string]string)
+
+	// pattern getJSON
+	patternGetJSON := `\$\.getJSON\(([^,]+),`
+	regexGetJSON := regexp.MustCompile(patternGetJSON)
+
+	patternGetJSONMatches := regexGetJSON.FindAllStringSubmatch(content, -1)
+
+	for _, match := range patternGetJSONMatches {
+		if len(match) > 1 {
+			// fmt.Printf("getJSON value: %s\n", match[1])
+			kv[match[1]] = ""
+		}
+	}
+
+	// pattern imageUrl
+	patternImgUrl := `imageUrl:(.*?),`
+	regexImgUrl := regexp.MustCompile(patternImgUrl)
+
+	patternImgUrlMatches := regexImgUrl.FindAllStringSubmatch(content, -1)
+
+	// combine every matches
+	for _, match := range patternImgUrlMatches {
+		if len(match) > 1 {
+			kv[match[1]] = ""
+		}
+	}
+
+	// pattern .attr src
+	patternAttr := `\$\([^)]+\)\.attr\('src', (.*?);`
+	regexAttr := regexp.MustCompile(patternAttr)
+	patternAttrMatches := regexAttr.FindAllStringSubmatch(content, -1)
+
+	for _, match := range patternAttrMatches {
+		if len(match) > 1 {
+			kv[match[1][:len(match[1])-1]] = ""
+		}
+	}
+
+	return kv
 
 }
