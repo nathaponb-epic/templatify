@@ -24,10 +24,20 @@ var (
 
 			// prompt to user choose a command
 			cmds := []string{"cdnify", "localify"}
-			prompt := promptui.Select{
-				Label: "Select command",
-				Items: cmds,
+
+			templates := &promptui.SelectTemplates{
+				Label:    "{{ . }}?",
+				Active:   "\U0001F449 {{ . | cyan }}",
+				Inactive: "  {{ . | faint }}",
+				Selected: "\U0001F44D {{ . | green | bold }}",
+				Details:  "\n---------\n{{ . }}",
 			}
+			prompt := promptui.Select{
+				Label:     "Select Command",
+				Items:     cmds[:],
+				Templates: templates,
+			}
+
 			_, result, err := prompt.Run()
 			if err != nil {
 				return err

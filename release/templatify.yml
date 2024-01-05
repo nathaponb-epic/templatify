@@ -1,0 +1,62 @@
+commands:
+  - name: cdnify
+    exac_root: "myID"
+    domain: https://cdn-stg.adldigitalservice.com
+    path: /myid
+    app_prefix: /auth
+    app_folder: /myIDCDN
+    root_path:
+      image: /images
+      css: /script
+      script: /script
+      constant: /script
+      font: /fonts
+    ignore_dir:
+      - fonts
+      - images
+      - mail
+      - constant
+      - font-awesome-4.7.0
+      - sweetalert2-8.17.4
+      - fontawesome-6.2.1
+    ignore_file:
+      - bootstrap-datepicker.min.css
+      - bootstrap.min.css
+      - bootstrap.min.js
+      - bs-datepicker.js
+      - popper.min.js
+      - jsrsasign-all-min.js
+      - README.md
+      - .gitignore
+
+  - name: localify
+    exac_root: "myid"
+    domain:
+    path: /authtest/myID
+    app_prefix: /authtest
+    app_folder: /myID
+    root_path:
+      image: /images
+      css: /css
+      script: /script
+      font: /fonts
+      constant: /constant
+    ignore_dir:
+      - fonts
+      - images
+      - mail
+      - constant
+      - font-awesome-4.7.0
+      - fontawesome-6.2.1
+      - sweetalert2-8.17.4
+    ignore_file:
+      - bootstrap-datepicker.min.css
+      - bootstrap.min.css
+      - bootstrap.min.js
+      - bs-datepicker.js
+      - error.const.json
+      - jquery-3.3.1.min.js
+      - popper.min.js
+      - jsrsasign-all-min.js
+      - README.md
+      - .gitignore

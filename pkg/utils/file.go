@@ -46,7 +46,7 @@ func verifyFileType(refPath string, config Configuration) string {
 	}
 
 	// preserve the sub-dir path
-	finalPath := preserveSubDir(refPath)
+	finalPath := preserveSubDir(refPath, config)
 	if finalPath == "" {
 		return refPath
 	}
@@ -55,7 +55,7 @@ func verifyFileType(refPath string, config Configuration) string {
 
 }
 
-func preserveSubDir(refPath string) string {
+func preserveSubDir(refPath string, config Configuration) string {
 
 	slashedPaths := strings.Split(refPath, "/")
 
@@ -72,10 +72,6 @@ func preserveSubDir(refPath string) string {
 			return refPath
 		}
 
-		// exeption for last index symbol '
-		// if fileType[len(fileType)-1] == '\'' || fileType[len(fileType)-1] == '"' || fileType[len(fileType)-1] == '`' {
-		// 	fileType = fileType[:len(fileType)-1]
-		// }
 		fileType = unQuoteSuffix(fileType)
 
 		// get default root path of fileType
@@ -98,7 +94,12 @@ func preserveSubDir(refPath string) string {
 
 		if !found {
 			// return with default file type root path
-			return fmt.Sprintf("%s/%s", supportFileType[fileType], lastSlash)
+			tmpExactRootPath := config.TemplateExacRoot
+			paths := strings.Split(refPath, tmpExactRootPath)
+			if len(paths) > 1 {
+				return paths[1]
+			}
+
 		} else {
 
 			target := slashedPaths[startIndex:]
@@ -131,14 +132,3 @@ func unQuoteSuffix(s string) string {
 
 	return s
 }
-
-// func isValidURL(s string) bool {
-
-// 	_, err := url.ParseRequestURI(s)
-// 	if err != nil {
-// 		return false
-// 	}
-
-// 	return true
-// 	// return u.Scheme != "" && strings.Contains(u.Scheme, "http")
-// }

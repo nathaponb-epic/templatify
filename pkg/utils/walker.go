@@ -10,11 +10,13 @@ type Commands struct {
 	Configulation []Configuration `mapstructure:"commands"`
 }
 type Configuration struct {
-	Name      string `mapstructure:"name"`
-	Domain    string `mapstructure:"domain"`
-	Path      string `mapstructure:"path"`
-	AppPrefix string `mapstructure:"app_prefix"`
-	RootPath  struct {
+	Name             string `mapstructure:"name"`
+	Domain           string `mapstructure:"domain"`
+	Path             string `mapstructure:"path"`
+	AppPrefix        string `mapstructure:"app_prefix"`
+	AppFolder        string `mapstructure:"app_folder"`
+	TemplateExacRoot string `mapstructure:"exac_root"`
+	RootPath         struct {
 		Image    string `mapstructure:"image"`
 		CSS      string `mapstructure:"css"`
 		Script   string `mapstructure:"script"`
@@ -41,6 +43,8 @@ func visitFile(config Configuration) filepath.WalkFunc {
 
 	return func(path string, info os.FileInfo, err error) error {
 
+		path = filepath.ToSlash(path)
+
 		if err != nil {
 			fmt.Printf("error accessing path %s: %v\n", path, err)
 			return nil
@@ -57,7 +61,8 @@ func visitFile(config Configuration) filepath.WalkFunc {
 			}
 
 			if skip {
-				fmt.Printf("Skipped dir: %s\n", path)
+
+				fmt.Printf("✘ Skipped Dir6: %s\n", path)
 				return filepath.SkipDir
 			}
 
@@ -72,7 +77,7 @@ func visitFile(config Configuration) filepath.WalkFunc {
 		}
 
 		if shouldSkipThisFile {
-			fmt.Printf("Skipped file: %s\n", path)
+			fmt.Printf("✘ Skipped File: %s\n", path)
 			return nil
 		}
 

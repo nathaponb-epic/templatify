@@ -14,6 +14,9 @@ import (
 
 func processHTML(fileAbsPath string, config *Configuration) {
 
+	// handle slash path for every OS
+	fileAbsPath = filepath.ToSlash(fileAbsPath)
+
 	// read file content
 	htmlFile, err := os.Open(fileAbsPath)
 	if err != nil {
@@ -35,9 +38,10 @@ func processHTML(fileAbsPath string, config *Configuration) {
 
 		if n.Type == html.ElementNode {
 			// Check if the element is an <img>, <a>, or <script> tag
-			if n.Data == "img" || n.Data == "link" || n.Data == "script" {
+			if n.Data == "img" || n.Data == "link" || n.Data == "script" || n.Data == "style" {
 				// Iterate through the element's attributes
 				for i, attr := range n.Attr {
+
 					if (n.Data == "img" && attr.Key == "src") ||
 						(n.Data == "link" && attr.Key == "href") ||
 						(n.Data == "script" && attr.Key == "src") {
@@ -52,7 +56,6 @@ func processHTML(fileAbsPath string, config *Configuration) {
 				}
 
 			}
-
 			// process javascript code embeded in html file <script/>
 			if n.Data == "script" {
 
@@ -94,6 +97,36 @@ func processHTML(fileAbsPath string, config *Configuration) {
 				}
 
 			}
+			if n.Data == "style" {
+
+				styleContent := n.FirstChild.Data
+
+				// fmt.Println(styleContent)
+				kv := make(map[string]string)
+
+				pattern := `src: url\(([^)]+)\)`
+
+				re := regexp.MustCompile(pattern)
+
+				matches := re.FindAllStringSubmatch(styleContent, -1)
+
+				for _, match := range matches {
+					if len(match) > 1 {
+						kv[match[1]] = ""
+					}
+				}
+
+				for k, _ := range kv {
+					replaceVal := verifyFileType(k[:len(k)-1], *config)
+					kv[k] = replaceVal
+				}
+
+				for find, replace := range kv {
+					styleContent = strings.Replace(styleContent, find, fmt.Sprintf("'%s'", replace), -1)
+				}
+
+				n.FirstChild.Data = styleContent
+			}
 		}
 		// Recursively traverse child nodes, until there is no nextSibling
 		for c := n.FirstChild; c != nil; c = c.NextSibling {
@@ -115,10 +148,13 @@ func processHTML(fileAbsPath string, config *Configuration) {
 		return
 	}
 
-	fmt.Printf("Updated file: %s\n", fileAbsPath)
+	fmt.Printf("✔ Updated File: %s\n", fileAbsPath)
 }
 
 func processCSS(fileAbsPath string, config *Configuration) {
+
+	// handle slash path for every OS
+	fileAbsPath = filepath.ToSlash(fileAbsPath)
 
 	// open file and read file content
 	cssFile, err := os.Open(fileAbsPath)
@@ -152,16 +188,16 @@ func processCSS(fileAbsPath string, config *Configuration) {
 	patternBgMatches := regexBg.FindAllStringSubmatch(cssContent, -1)
 
 	for _, match := range patternBgMatches {
-		if len(match) > 1 {
+		if len(match) > 1 && len(match[1]) < 100 {
 			kv[match[1]] = ""
 		}
 	}
 
 	for k, _ := range kv {
-		slashes := strings.Split(k, "/")
-		fileName := slashes[len(slashes)-1]
+		// slashes := strings.Split(k, "/")
+		// fileName := slashes[len(slashes)-1]
 
-		replaceVal := verifyFileType(fileName[:len(fileName)-1], *config)
+		replaceVal := verifyFileType(k, *config)
 
 		kv[k] = replaceVal
 	}
@@ -176,7 +212,7 @@ func processCSS(fileAbsPath string, config *Configuration) {
 		log.Fatal(err)
 	}
 
-	fmt.Printf("Updated file: %s\n", fileAbsPath)
+	fmt.Printf("✔ Updated File: %s\n", fileAbsPath)
 }
 
 func processJS(fileAbsPath string, config *Configuration) {
@@ -204,16 +240,27 @@ func processJS(fileAbsPath string, config *Configuration) {
 
 	if fileNameWithExt[0] == "prefix" {
 
-		pattern := `const FOLDER = (.*?);`
-		regex := regexp.MustCompile(pattern)
-		matches := regex.FindAllStringSubmatch(jsContent, -1)
+		appPrefixPattern := `const PREFIX = (.*?);`
+		appFolderpattern := `const FOLDER = (.*?);`
+
+		appPrefixRegex := regexp.MustCompile(appPrefixPattern)
+		appFolderRegex := regexp.MustCompile(appFolderpattern)
+
+		appPrefixmatches := appPrefixRegex.FindAllStringSubmatch(jsContent, -1)
+		appFoldermatches := appFolderRegex.FindAllStringSubmatch(jsContent, -1)
 
 		kv := make(map[string]string)
 
 		// prepare value from user define yaml config file
-		for _, match := range matches {
+		for _, match := range appPrefixmatches {
 			if len(match) > 1 {
 				kv[match[1]] = config.AppPrefix
+			}
+		}
+
+		for _, match := range appFoldermatches {
+			if len(match) > 1 {
+				kv[match[1]] = config.AppFolder
 			}
 		}
 
@@ -258,7 +305,7 @@ func processJS(fileAbsPath string, config *Configuration) {
 		log.Fatal(err)
 	}
 
-	fmt.Printf("Updated file: %s\n", fileAbsPath)
+	fmt.Printf("✔ Updated File: %s\n", fileAbsPath)
 
 }
 
